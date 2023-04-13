@@ -34,4 +34,12 @@ public class HonkService {
         }
     }
 
+    public Page<Honk> getMemberHonks(Member author, String search, Pageable pageable) {
+        if (search == null || search.isBlank()) {
+            return honkRepository.findByAuthorOrderByTimestampDesc(author, pageable);
+        } else {
+            return honkRepository.findByContentContainingAndAuthorOrderByTimestampDesc(search, author, pageable);
+        }
+    }
+
 }
