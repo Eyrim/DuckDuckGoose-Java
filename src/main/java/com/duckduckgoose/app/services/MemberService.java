@@ -24,5 +24,8 @@ public class MemberService {
             return memberRepository.findByUsernameContaining(search, pageable);
         }
     }
+    public Member getMemberByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
 
 }
