@@ -25,12 +25,12 @@ public class HonkService {
         this.honkRepository = honkRepository;
         this.memberRepository = memberRepository;
     }
-  
-    public Page<Honk> getMemberHonks(Member author, String search, Pageable pageable) {
+
+    public Page<Honk> getHonks(String search, Pageable pageable) {
         if (search == null || search.isBlank()) {
-            return honkRepository.findByAuthorOrderByTimestampDesc(author, pageable);
+            return honkRepository.findAllByOrderByTimestampDesc(pageable);
         } else {
-            return honkRepository.findByContentContainingAndAuthorOrderByTimestampDesc(search, author, pageable);
+            return honkRepository.findByContentContainingOrderByTimestampDesc(search, pageable);
         }
     }
 
