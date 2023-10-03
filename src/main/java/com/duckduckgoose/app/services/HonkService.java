@@ -26,4 +26,12 @@ public class HonkService {
         this.memberRepository = memberRepository;
     }
 
+    public Page<Honk> getHonks(String search, Pageable pageable) {
+        if (search == null || search.isBlank()) {
+            return honkRepository.findAllByOrderByTimestampDesc(pageable);
+        } else {
+            return honkRepository.findByContentContainingOrderByTimestampDesc(search, pageable);
+        }
+    }
+
 }
