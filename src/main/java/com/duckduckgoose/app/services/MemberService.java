@@ -17,4 +17,12 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    public Page<Member> getMembers(String search, Pageable pageable) {
+        if (search == null || search.isBlank()) {
+            return memberRepository.findAll(pageable);
+        } else {
+            return memberRepository.findByUsernameContaining(search, pageable);
+        }
+    }
+
 }

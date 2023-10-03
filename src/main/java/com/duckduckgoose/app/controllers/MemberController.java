@@ -33,4 +33,20 @@ public class MemberController {
         this.memberService = memberService;
         this.honkService = honkService;
     }
+
+    @RequestMapping(value = "/members", method = RequestMethod.GET)
+    public ModelAndView getMembersPage(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam (value = "page", required = false) Integer page
+    ) {
+        Page<Member> members;
+        Pageable pageRequest = PaginationHelper.getPageRequest(page);
+        members = memberService.getMembers(search, pageRequest);
+
+
+        MembersViewModel membersViewModel = new MembersViewModel(members, search, filter);
+        return new ModelAndView("members", "model", membersViewModel);
+    }
+
 }

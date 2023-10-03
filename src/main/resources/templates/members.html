@@ -8,6 +8,42 @@
     <title>Members</title>
   </head>
   <body>
-
+    <div layout:fragment="content">
+      <h1 class="fs-4 bg-info border-top border-start border-end border-primary rounded-top mb-0 p-2">Find people you know.</h1>
+      <form method="get" class="mb-3">
+        <div class="input-group">
+          <input type="hidden" name="filter" th:if="${model.getFilter()}" th:value="${model.getFilter()}">
+          <input class="form-control text-center" name="search" id="search" placeholder="Search members" aria-label="Search members"
+                 th:value="${model.getSearch()}" style="padding-left: 3.375rem; border-top-left-radius: 0;">
+          <button class="btn btn-primary" type="submit" aria-label="Search" style="width: 2.625rem; border-top-right-radius: 0;"><i class="bi bi-search"></i></button>
+        </div>
+      </form>
+      <div class="card bg-info border-primary rounded-0 rounded-bottom">
+        <div class="card-body">
+          <div class="card text-start mb-3" th:each="member : ${model.getMembers().getContent()}">
+            <div class="card-body">
+              <h5 class="card-title"><a th:href="@{/member/{username}(username=${member.getUsername()})}" class="text-decoration-none" th:text="${'@' + member.getUsername()}"></a></h5>
+              <p class="card-text">
+                <span th:text="${member.getHonks().size() + ' honk' + (member.getHonks().size() == 1 ? '' : 's')}"></span>
+              </p>
+            </div>
+          </div>
+          <p class="card-text" th:if="${model.getMembers().isEmpty()}">No members to show.</p>
+          <nav aria-label="Page navigation" th:unless="${model.getPages().isEmpty()}">
+            <ul class="pagination justify-content-center mb-0">
+              <li th:each="pageNumber: ${model.getPages()}" th:class="${'page-item' + (pageNumber == model.getMembers().getNumber() + 1 ? ' active' : '')}">
+                <a class="page-link"
+                   th:unless="${pageNumber == null}"
+                   th:text="${pageNumber}"
+                   th:href="@{/members(__(${#strings.isEmpty(model.getFilter())} ? '' : ('filter=' + ${model.getFilter()}))__,
+                                         page=${pageNumber},
+                                         __(${#strings.isEmpty(model.getSearch())} ? '' : ('search=' + ${model.getSearch()}))__)}"></a>
+                <span class="page-link" th:if="${pageNumber == null}">&ctdot;</span>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
