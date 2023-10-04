@@ -28,6 +28,8 @@ public class HonkService {
 
     public void createHonk(Member author, HonkRequest request) throws ValidationException {
         Honk honk = new Honk(author, request.getContent());
+
+        this.honkRepository.save(honk);
     }
 
 }
