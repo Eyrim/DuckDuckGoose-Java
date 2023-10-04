@@ -8,6 +8,22 @@
     <title>Honk</title>
   </head>
   <body>
-
+    <div layout:fragment="content">
+      <div class="card border-primary">
+        <div class="card-header bg-info border-primary">
+          <h1 class="fs-4 mb-0">Honk about something.</h1>
+        </div>
+        <div class="card-body">
+          <form method="post" th:action="@{/honk}" th:object="${honkRequest}" class="mx-auto">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <div class="mb-3">
+              <textarea th:class="${'form-control' + (#fields.hasErrors('content') ? ' is-invalid' : '')}" rows="3" th:field="*{content}" aria-label="Write your honk"></textarea>
+              <span class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Honk</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
