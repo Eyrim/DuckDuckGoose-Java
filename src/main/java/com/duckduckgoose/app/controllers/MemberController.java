@@ -53,15 +53,13 @@ public class MemberController {
     public ModelAndView getMemberPage(
             @PathVariable String username,
             @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "filter", required = false) String filter,
             @RequestParam (value = "page", required = false) Integer page
     ) {
-        Page<Member> members;
+        Member member = memberService.getMemberByUsername(username);
         Pageable pageRequest = PaginationHelper.getPageRequest(page);
-        members = memberService.getMembers(search, pageRequest);
+        Page<Honk> honks = honkService.getMemberHonks(member, search, pageRequest);
 
-
-        MembersViewModel membersViewModel = new MembersViewModel(members, search, filter);
-        return new ModelAndView("members", "model", membersViewModel);
+        MemberViewModel memberViewModel = new MemberViewModel(member, honks, search);
+        return new ModelAndView("member", "model", memberViewModel);
     }
 }
