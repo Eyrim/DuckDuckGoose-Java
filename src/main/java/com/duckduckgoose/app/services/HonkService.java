@@ -39,6 +39,7 @@ public class HonkService {
             return honkRepository.findByContentContainingOrderByTimestampDesc(search, pageable);
         }
     }
+
     public Page<Honk> getMemberHonks(Member author, String search, Pageable pageable) {
         if (search == null || search.isBlank()) {
             return honkRepository.findByAuthorOrderByTimestampDesc(author, pageable);
@@ -47,4 +48,12 @@ public class HonkService {
         }
     }
 
+    public Page<Honk> getFollowedMemberHonks(Member followerMember, String search, Pageable pageable) {
+        Set<Member> followedMembers = memberRepository.findByFollowerMembersContaining(followerMember);
+        if (search == null || search.isBlank()) {
+            return honkRepository.findByAuthorInOrderByTimestampDesc(followedMembers, pageable);
+        } else {
+            return honkRepository.findByContentContainingAndAuthorInOrderByTimestampDesc(search, followedMembers, pageable);
+        }
+    }
 }

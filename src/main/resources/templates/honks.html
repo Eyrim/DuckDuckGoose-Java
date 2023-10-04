@@ -19,6 +19,14 @@
         </div>
       </form>
       <div class="text-success mb-3" th:if="${flashMessage}" th:text="${flashMessage}"></div>
+      <nav class="nav nav-pills nav-justified">
+        <a th:class="${'nav-link rounded-0 rounded-top' + (model.getFilter() != 'followedUsers' ? ' active' : '')}"
+           th:attrappend="aria-current=${model.getFilter() != 'followedUsers'} ? 'page'"
+           th:href="@{/honks(, __(${#strings.isEmpty(model.getSearch())} ? '' : ('search=' + ${model.getSearch()}))__)}">All honks</a>
+        <a th:class="${'nav-link rounded-0 rounded-top' + (model.getFilter() == 'followedUsers' ? ' active' : '')}"
+           th:attrappend="aria-current=${model.getFilter() == 'followedUsers'} ? 'page'"
+           th:href="@{/honks(filter='followedUsers', __(${#strings.isEmpty(model.getSearch())} ? '' : ('search=' + ${model.getSearch()}))__)}">People I follow</a>
+      </nav>
       <div class="card bg-info border-primary rounded-0 rounded-bottom">
         <div class="card-body">
           <div class="card text-start mb-3" th:each="honk : ${model.getHonks().getContent()}">
@@ -38,8 +46,8 @@
                    th:unless="${pageNumber == null}"
                    th:text="${pageNumber}"
                    th:href="@{/honks(__(${#strings.isEmpty(model.getFilter())} ? '' : ('filter=' + ${model.getFilter()}))__,
-                                       page=${pageNumber},
-                                       __(${#strings.isEmpty(model.getSearch())} ? '' : ('search=' + ${model.getSearch()}))__)}"></a>
+                                     page=${pageNumber},
+                                     __(${#strings.isEmpty(model.getSearch())} ? '' : ('search=' + ${model.getSearch()}))__)}"></a>
                 <span class="page-link" th:if="${pageNumber == null}">&ctdot;</span>
               </li>
             </ul>

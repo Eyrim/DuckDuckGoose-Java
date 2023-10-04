@@ -29,6 +29,30 @@ public class HonkController {
         this.honkService = honkService;
     }
 
+    @RequestMapping(value = "/honks", method = RequestMethod.GET)
+    public ModelAndView getHonksPage(
+            @RequestParam (value = "search", required = false) String search,
+            @RequestParam (value = "filter", required = false) String filter,
+            @RequestParam (value = "page", required = false) Integer page,
+            RedirectAttributes redirectAttributes
+    ) {
+        Page<Honk> honks;
+        Pageable pageRequest = PaginationHelper.getPageRequest(page);
+        if (filter != null && filter.equals("followedUsers")) {
+            if (!AuthHelper.isAuthenticated()) {
+                redirectAttributes.addFlashAttribute("redirected", true);
+                return new ModelAndView("redirect:/login");
+            }
+            Member followerMember = AuthHelper.getAuthenticatedMember();
+            honks = honkService.getFollowedMemberHonks(followerMember, search, pageRequest);
+        } else {
+            honks = honkService.getHonks(search, pageRequest);
+        }
+
+        HonksViewModel honksViewModel = new HonksViewModel(honks, search, filter);
+        return new ModelAndView("honks", "model", honksViewModel);
+    }
+
     @RequestMapping(value = "/honk", method = RequestMethod.GET)
     public ModelAndView getHonkCreationPage() {
         return new ModelAndView("honk", "honkRequest", new HonkRequest());
@@ -48,19 +72,4 @@ public class HonkController {
         redirectAttributes.addFlashAttribute("flashMessage", "Honk posted successfully.");
         return new ModelAndView("redirect:/honks");
     }
-  
-    @RequestMapping(value = "/honks", method = RequestMethod.GET)
-    public ModelAndView getHonksPage(
-            @RequestParam (value = "search", required = false) String search,
-            @RequestParam (value = "filter", required = false) String filter,
-            @RequestParam (value = "page", required = false) Integer page
-    ) {
-        Page<Honk> honks;
-        Pageable pageRequest = PaginationHelper.getPageRequest(page);
-        honks = honkService.getHonks(search, pageRequest);
-
-        HonksViewModel honksViewModel = new HonksViewModel(honks, search, filter);
-        return new ModelAndView("honks", "model", honksViewModel);
-    }
-
 }
